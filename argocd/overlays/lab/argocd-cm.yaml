@@ -11,20 +11,20 @@ data:
       generate:
         command: [sh, -c]
         args: ["argocd-flux-plugin . --path $GIT_PATH"]
-  dex.config: |
-    # connectors:
-    # - type: github
-    #   id: github
-    #   name: GitHub
-    #   config:
-    #     clientID: fb563b3a8dd7ea52f683
-    #     clientSecret: $argocd-auth:dex.github.clientSecret
-    #     orgs:
-    #     - name: argoproj
-    #       teams:
-    #       - argo-rollouts-approvers
-    #       - argo-workflows-approvers
-    #       - argocd-approvers
+  dex.config: #|
+  # connectors:
+  # - type: github
+  #   id: github
+  #   name: GitHub
+  #   config:
+  #     clientID: fb563b3a8dd7ea52f683
+  #     clientSecret: $argocd-auth:dex.github.clientSecret
+  #     orgs:
+  #     - name: argoproj
+  #       teams:
+  #       - argo-rollouts-approvers
+  #       - argo-workflows-approvers
+  #       - argocd-approvers
 kind: ConfigMap
 metadata:
   name: argocd-cm

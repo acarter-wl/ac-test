@@ -5,6 +5,8 @@ resources:
   - base/argo-cd-issuer.yaml
   - base/argo-cd-certificate.yaml
   - base/argo-cd-ui-ingress.yaml
+  - argo.yaml
+  - repo-secrets.yaml
   - base/rollouts-extension.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/ha/install.yaml
 components:
@@ -12,8 +14,6 @@ components:
 patches:
   - path: overlays/lab/argocd-cm.yaml
   - path: overlays/lab/argocd-server-service.yaml
-  - path: overlays/lab/argocd-notifications-controller-deploy.yaml
-  - path: overlays/lab/argocd-notifications-cm.yaml
   - path: overlays/lab/argocd-cmd-params-cm.yaml
   - path: overlays/lab/argocd-rbac-cm.yaml
   - path: overlays/lab/argocd-ingress.yaml
@@ -21,4 +21,4 @@ patches:
 images:
   - name: quay.io/argoproj/argocd
     newName: ghcr.io/argoproj/argo-cd/argocd
-    newTag: 2.13.0-1aa898cb
+    newTag: latest

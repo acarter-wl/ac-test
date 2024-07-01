@@ -1,12 +1,13 @@
 # additional resources like ingress rules, cluster and repository secrets.
 resources:
   - github.com/argoproj/argo-cd//manifests/cluster-install?ref=stable
-  # - clusters-secrets.yaml
+  - argo.yaml
   - repo-secrets.yaml
 # changes to config maps
 patches:
   - path: overlays/lab/argocd-cm.yaml
   - path: overlays/lab/argocd-rbac-cm.yaml
+  - path: overlays/lab/argocd-server-service.yaml
+  - path: overlays/lab/argocd-cmd-params-cm.yaml
+  - path: overlays/lab/argocd-ingress.yaml
 # changes to secrets
-secretGenerator:
-  - name: argo-secret # this is the secret that will be created in your cluster
