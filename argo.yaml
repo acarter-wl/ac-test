@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-guestbook
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/acarter-ims/ac-test.git
+    targetRevision: HEAD
+    chart: argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
