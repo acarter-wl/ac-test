@@ -1,0 +1,108 @@
+## ArgoCD configuration
+## Ref: https://github.com/argoproj/argo-cd
+##
+## Server
+server:
+  ingress:
+    enabled: true
+    name: argocd-ingress
+    namespace: argocd
+    annotations:
+      kubernetes.io/ingress.class: "alb"
+      alb.ingress.kubernetes.io/scheme: "internet-facing"
+      alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-east-2:637423399955:certificate/3b67435a-56b4-4bad-b7ce-3a999622bb60"
+      alb.ingress.kubernetes.io/ssl-policy: "ELBSecurityPolicy-2016-08"
+      alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      alb.ingress.kubernetes.io/healthcheck-path: "/login"
+      alb.ingress.kubernetes.io/target-type: "ip"
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80, "HTTPS": 443}]'
+      alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    labels:
+      app: argocd-ingress
+    hosts:
+      - host: argocd.platform.intelerad.com
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              name: argocd-server
+              port: 443
+  ## ArgoCD config
+  ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  configEnabled: true
+  config:
+    repositories: |
+      - type: git
+        url: https://github.com/acarter-ims/ac-test
+      - name: argo-helm
+        type: helm
+        url: https://argoproj.github.io/argo-helm
+  additionalApplications:
+    - name: argocd
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        helm:
+          version: v3
+          valueFiles:
+            - values.yaml
+            - ../values-override.yaml
+        path: argocd-install/argo-cd
+        repoURL: https://github.com/acarter-ims/ac-test
+        targetRevision: HEAD
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+    - name: argocd-apps
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        path: argocd-apps
+        repoURL: https://github.com/acarter-ims/ac-test
+        targetRevision: HEAD
+        directory:
+          recurse: true
+          jsonnet: {}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+    - name: argocd-appprojects
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        path: argocd-appprojects
+        repoURL: https://github.com/acarter-ims/ac-test
+        targetRevision: HEAD
+        directory:
+          recurse: true
+          jsonnet: {}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+  additionalProjects:
+    - name: argocd
+      namespace: argocd
+      additionalLabels: {}
+      additionalAnnotations: {}
+      description: Argocd Project
+      sourceRepos:
+        - '*'
+      destinations:
+        - namespace: argocd
+          server: https://kubernetes.default.svc
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      orphanedResources:
+        warn: false
