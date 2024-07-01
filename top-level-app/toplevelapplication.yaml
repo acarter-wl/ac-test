@@ -12,8 +12,8 @@ spec:
   project: default
   source:
     repoURL: https://github.com/acarter-ims/ac-test.git
-    targetRevision: argocd-applicationsets
-    path: applicationsets
+    targetRevision: HEAD
+    path: top-level-app
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
