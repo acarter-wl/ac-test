@@ -27,6 +27,13 @@ server:
             service:
               name: argocd-server
               port: 443
+              ## ArgoCD config
+              ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  ## ArgoCD configuration
+  ## Ref: https://github.com/argoproj/argo-cd
+  ##
+  ## Server
+
   ## ArgoCD config
   ## reference https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
   configEnabled: true
@@ -86,14 +93,7 @@ server:
         directory:
           recurse: true
           jsonnet: {}
-      syncPolicy:
-        automated:
-          selfHeal: true
-          prune: true
-  additionalProjects:
-    - name: argocd
-      namespace: argocd
-      additionalLabels: {}
+      syncPolicy:itionalLabels: {}
       additionalAnnotations: {}
       description: Argocd Project
       sourceRepos:
